@@ -17,6 +17,7 @@ autoCompilerPlugins := true
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 bintrayPackageLabels := Seq("library", "grizzled", "scala")
 
+/*
 wartremoverErrors in (Compile, compile) ++= Seq(
   Wart.ArrayEquals,
   // Wart.Any,
@@ -45,6 +46,7 @@ wartremoverErrors in (Compile, compile) ++= Seq(
   Wart.Var,
   Wart.While
 )
+*/
 
 
 // ---------------------------------------------------------------------------
@@ -54,7 +56,8 @@ wartremoverErrors in (Compile, compile) ++= Seq(
 // ScalaTest
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+  "org.scala-lang.modules" %% "scala-collection-compat" % "0.1.1",
+  "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % "test"
 )
 
 parallelExecution in Test := true

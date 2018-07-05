@@ -4,6 +4,7 @@ import scala.collection.immutable.LinearSeq
 import scala.language.implicitConversions
 import java.util.{Collection => JCollection, Iterator => JIterator}
 
+import scala.collection.compat._
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuildFrom
 import scala.collection.mutable.{Builder => MutableBuilder}
@@ -34,7 +35,7 @@ object Implicits {
       * @param predicate the predicate. The mapping operation will continue
       *                  until this function returns `false` or the iterable
       *                  is exhausted
-      * @param cbf       the `CanBuildFrom` factory, which allows this function
+      * @param cbf       the `Factory`, which allows this function
       *                  to make an instance of the subclass without knowing
       *                  what it is
       * @tparam U        the type of the returned subclass
@@ -42,7 +43,7 @@ object Implicits {
       * @return          the mapped (and possibly filtered) result
       */
     def mapWhile[U, J](mapper: T => U, predicate: U => Boolean)
-                      (implicit cbf: CanBuildFrom[List[T], U, J]): J = {
+                      (implicit cbf: Factory[U, J]): J = {
       @tailrec
       def loop(xs: List[T], acc: MutableBuilder[U, J]): J = {
         xs match {
@@ -59,7 +60,7 @@ object Implicits {
         }
       }
 
-      loop(container.toList, cbf())
+      loop(container.toList, cbf.newBuilder)
     }
   }
 
@@ -90,14 +91,14 @@ object Implicits {
   /** Useful for converting a collection into an object suitable for use with
     * Scala's `for` loop.
     */
-  implicit class CollectionIterator[T](val iterator: JIterator[T])
+  implicit class CollectionIterator[T](val self: JIterator[T])
     extends Iterator[T] {
 
     def this(c: JCollection[T]) = this(c.iterator)
 
-    def hasNext: Boolean = iterator.hasNext
+    def hasNext: Boolean = self.hasNext
 
-    def next: T = iterator.next
+    def next: T = self.next
   }
 
   /** An enrichment class that decorates a `LinearSeq`.

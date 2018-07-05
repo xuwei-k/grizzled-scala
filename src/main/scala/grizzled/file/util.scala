@@ -1157,7 +1157,7 @@ object util {
       case (pfx, subPath) =>
         // We have a drive letter.
 
-        (pfx + "\\", subPath dropWhile (_ == '\\') mkString "")
+        (pfx + "\\", subPath.dropWhile(_ == '\\').toSeq mkString "")
     }
 
     // Normalize the path pieces. Note: normalizePathPieces() doesn't
